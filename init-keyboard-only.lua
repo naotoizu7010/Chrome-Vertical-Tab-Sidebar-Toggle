@@ -1,6 +1,6 @@
 -- Chrome-Vertical-Tab-Sidebar-Toggle (Keyboard Only)
 -- Hammerspoon script to toggle Chrome's native vertical tab sidebar
--- via keyboard shortcut only (Cmd+S).
+-- via keyboard shortcut only (Cmd+E).
 -- Uses macOS Accessibility API to find and press the sidebar button.
 --
 -- Requirements:
@@ -13,7 +13,7 @@
 --   (or append to your existing init.lua)
 --
 -- Triggers:
---   Cmd+S in Chrome -> toggle sidebar (blocks Chrome's save-page)
+--   Cmd+E in Chrome -> toggle sidebar
 --
 -- Debug hotkeys (disabled by default; set ENABLE_DEBUG_HOTKEYS = true):
 --   Cmd+Alt+D -> show service status
@@ -146,7 +146,7 @@ setGracePeriod = function(seconds)
 end
 
 -- ----------------------------------------------------------
--- Keyboard: Cmd+S intercept
+-- Keyboard: Cmd+E intercept
 -- ----------------------------------------------------------
 startKeyTap = function()
     if keyTap and keyTap:isEnabled() then return end
@@ -167,10 +167,10 @@ startKeyTap = function()
         local flags = event:getFlags()
         local keyCode = event:getKeyCode()
 
-        -- Cmd+S -> toggle sidebar
+        -- Cmd+E -> toggle sidebar
         if flags.cmd and not flags.ctrl and not flags.alt and not flags.shift
-            and keyCode == keycodes.map["s"] then
-            log("Cmd+S intercepted, toggling sidebar")
+            and keyCode == keycodes.map["e"] then
+            log("Cmd+E intercepted, toggling sidebar")
             toggleSidebar()
             return true
         end

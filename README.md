@@ -82,7 +82,7 @@ Edit the `SCHEME` variable at the top of `init.lua` to choose a mode:
 
 | Scheme | Value | Triggers |
 |--------|-------|----------|
-| Keyboard only | `1` | `Cmd+S` toggles sidebar |
+| Keyboard only | `1` | `Cmd+E` toggles sidebar |
 | Mouse edge only | `2` | Hover left edge to expand, move beyond 380px to collapse |
 | Keyboard + Mouse | `3` | Both triggers active (default) |
 
@@ -96,7 +96,7 @@ All triggers are automatically disabled when Chrome is not the frontmost app.
 
 | Trigger | Action | Scheme |
 |---------|--------|--------|
-| `Cmd+S` | Toggle sidebar | 1 & 3 |
+| `Cmd+E` | Toggle sidebar | 1 & 3 |
 | Mouse hover at left edge (0-2px) for 0.15s | Expand sidebar | 2 & 3 |
 | Mouse moves beyond 380px from left edge | Collapse sidebar | 2 & 3 |
 
@@ -133,12 +133,12 @@ local DEBUG = true  -- print debug messages to Console
 
 ## Customizing the keyboard shortcut
 
-Available in both `init.lua` and `init-keyboard-only.lua`. The default shortcut is `Cmd+S`, which overrides Chrome's native "Save page" shortcut. To change it, edit the key check in the `createKeyTap` function:
+Available in both `init.lua` and `init-keyboard-only.lua`. The default shortcut is `Cmd+E`, changed from the earlier `Cmd+S` default so Chrome's native "Save page" shortcut remains available. To change it, edit the key check in the `createKeyTap` function:
 
 ```lua
--- Cmd+S -> toggle sidebar
+-- Cmd+E -> toggle sidebar
 if flags.cmd and not flags.ctrl and not flags.alt and not flags.shift
-    and keyCode == keycodes.map["s"] then
+    and keyCode == keycodes.map["e"] then
 ```
 
 ### Modifier keys
@@ -156,7 +156,7 @@ Set the flag to `true` to require it, `not flags.xxx` to exclude it.
 
 ### Key code
 
-Change `keycodes.map["s"]` to any key name. Common examples:
+Change `keycodes.map["e"]` to any key name. Common examples:
 
 ```lua
 keycodes.map["s"]       -- S
@@ -193,7 +193,7 @@ After editing, reload Hammerspoon config to apply.
 
 ## How it works
 
-1. An `eventtap` intercepts `Cmd+S` when Chrome is frontmost (schemes 1 & 3)
+1. An `eventtap` intercepts `Cmd+E` when Chrome is frontmost (schemes 1 & 3)
 2. A mouse position poller (50Hz) detects left-edge hover and exit (schemes 2 & 3)
 3. Both triggers call `toggleSidebar()` which:
    - Gets Chrome's `AXUIElement` root via `hs.axuielement.applicationElement()`
