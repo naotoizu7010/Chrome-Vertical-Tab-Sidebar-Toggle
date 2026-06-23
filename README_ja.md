@@ -76,6 +76,10 @@ https://github.com/user-attachments/assets/bcf2a76a-8028-4b63-bc8a-f0b9e1178a25
    - システム設定 → 一般 → ログイン項目
    - Hammerspoon を追加
 
+6. (オプション) Hammerspoon の Dock アイコンを非表示にする:
+   - このスクリプトでは `local HIDE_DOCK_ICON = true` でデフォルト有効です
+   - 設定のリロードは引き続き Hammerspoon のメニューバーアイコンから実行できます
+
 ## スキーム (`init.lua`)
 
 `init.lua` の先頭にある `SCHEME` 変数を編集してモードを選択:
@@ -128,6 +132,7 @@ local MOUSE_POLL_INTERVAL = 0.05  -- マウス位置チェックの間隔(秒)
 ### 両バージョン共通
 
 ```lua
+local HIDE_DOCK_ICON = true  -- 実行中の Hammerspoon を Dock から隠す
 local DEBUG = true  -- コンソールにデバッグメッセージを出力
 ```
 

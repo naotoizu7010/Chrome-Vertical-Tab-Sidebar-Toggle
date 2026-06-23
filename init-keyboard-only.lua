@@ -30,6 +30,7 @@ local caffeinate = hs.caffeinate
 local timer     = hs.timer
 local app       = hs.application
 local alert     = hs.alert
+local dockicon  = hs.dockicon
 
 -- ----------------------------------------------------------
 -- Configuration
@@ -37,6 +38,11 @@ local alert     = hs.alert
 local APP_NAME = "Google Chrome"
 local DEBUG    = true
 local ENABLE_DEBUG_HOTKEYS = false
+local HIDE_DOCK_ICON = true  -- hide Hammerspoon from the Dock while running
+
+if HIDE_DOCK_ICON and dockicon then
+    dockicon.hide()
+end
 
 local SIDEBAR_BUTTON_LABELS = {
     ["expand tabs"] = true,

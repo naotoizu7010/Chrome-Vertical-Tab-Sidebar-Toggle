@@ -38,6 +38,7 @@ local timer      = hs.timer
 local mouse      = hs.mouse
 local app        = hs.application
 local alert      = hs.alert
+local dockicon   = hs.dockicon
 
 -- ----------------------------------------------------------
 -- Configuration
@@ -49,6 +50,11 @@ local WAIT_TIME           = 0.15    -- seconds to hover before triggering
 local MOUSE_POLL_INTERVAL = 0.05    -- seconds between mouse position checks
 local DEBUG               = true
 local ENABLE_DEBUG_HOTKEYS = false
+local HIDE_DOCK_ICON      = true    -- hide Hammerspoon from the Dock while running
+
+if HIDE_DOCK_ICON and dockicon then
+    dockicon.hide()
+end
 
 local SIDEBAR_BUTTON_LABELS = {
     ["expand tabs"] = true,

@@ -76,6 +76,10 @@ The vertical tab sidebar is not enabled by default. To turn it on:
    - System Settings → General → Login Items
    - Add Hammerspoon
 
+6. (Optional) Hide the Hammerspoon Dock icon:
+   - This is enabled by default in these scripts with `local HIDE_DOCK_ICON = true`
+   - You can still reload the config from the Hammerspoon menu bar icon
+
 ## Schemes (`init.lua`)
 
 Edit the `SCHEME` variable at the top of `init.lua` to choose a mode:
@@ -128,6 +132,7 @@ local MOUSE_POLL_INTERVAL = 0.05  -- seconds between mouse position checks
 ### Both versions
 
 ```lua
+local HIDE_DOCK_ICON = true  -- hide Hammerspoon from the Dock while running
 local DEBUG = true  -- print debug messages to Console
 ```
 
