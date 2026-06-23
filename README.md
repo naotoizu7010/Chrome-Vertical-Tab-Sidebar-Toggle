@@ -5,140 +5,151 @@
 <h1 align="center">Chrome-Vertical-Tab-Sidebar-Toggle</h1>
 
 <p align="center">
-  <strong>A Hammerspoon script that toggles Chrome's native vertical tab sidebar via the macOS Accessibility API</strong><br>
-  Keyboard shortcut, mouse edge trigger, or both — your choice.
+  <strong>macOS アクセシビリティ API を使用して、Chrome ネイティブの垂直タブのサイドバー　オン/オフを切り替えるアプリ、Hammerspoonのスクリプトです。</strong><br>
+  キーボードショートカット、画面端マウスホバートリガーのいずれかか療法を選択することができます。
 </p>
 
 <p align="center">
-  <a href="README.zh-CN.md">简体中文</a> · <a href="README.zh-TW.md">繁體中文</a> · <a href="README_ja.md">日本語</a> · <a href="README_ko.md">한국어</a> · <a href="README_es.md">Español</a> · <a href="README_pt-BR.md">Português</a> · <a href="README_ru.md">Русский</a> · <a href="README_fr.md">Français</a> · <a href="README_de.md">Deutsch</a>
+  <a href="README_en.md">English</a> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.zh-TW.md">繁體中文</a> · <a href="README_ko.md">한국어</a> · <a href="README_es.md">Español</a> · <a href="README_pt-BR.md">Português</a> · <a href="README_ru.md">Русский</a> · <a href="README_fr.md">Français</a> · <a href="README_de.md">Deutsch</a>
 </p>
 
 ---
 
-## What it does
+## 概要
 
-Chrome has a built-in vertical tab sidebar, but no keyboard shortcut to toggle it. This script solves that with two versions:
+Chrome 147（26年4月）に待望の垂直タブサイドバーがリリースされましたが、切り替えるキーボードショートカットがありません。  
+このアプリでは、2つの方法を用意しました。
 
-- **`init.lua`** — supports three selectable schemes (keyboard / mouse edge / both)
-- **`init-keyboard-only.lua`** — keyboard shortcut only, no mouse detection
+- **`init.lua`** — 3つの選択可能なスキームをサポート (キーボード / 画面端ホバー / 両方)
+- **`init-keyboard-only.lua`** — キーボードショートカットのみ、マウス検出なし
 
-It works by traversing Chrome's Accessibility tree (`AXUIElement`) to find the "Expand Tabs" / "Collapse Tabs" button and pressing it via `AXPress`. Same approach as [ChromeSidebarToggleRaycast](https://github.com/RotulPlastik/ChromeSidebarToggleRaycast).
+**仕組み**
+Chrome のアクセシビリティツリー(`AXUIElement`)をトラバースして「Expand Tabs」/「Collapse Tabs」ボタンを見つけ、`AXPress` で押すことで動作します。[ChromeSidebarToggleRaycast](https://github.com/RotulPlastik/ChromeSidebarToggleRaycast) と同じアプローチです。
 
-## Demo
+## デモ
 
 https://github.com/user-attachments/assets/bcf2a76a-8028-4b63-bc8a-f0b9e1178a25
 
-## Requirements
+## 必要要件
 
 - macOS 13+
 - [Hammerspoon](https://www.hammerspoon.org)
-- Google Chrome with vertical tab sidebar enabled
-- Accessibility permission granted to Hammerspoon
+- 垂直タブサイドバーが有効な Google Chrome
+- Hammerspoon にアクセシビリティ権限が付与されていること
 
-## Enable vertical tab sidebar in Chrome
+## Chrome で垂直タブサイドバーを有効にする
 
-The vertical tab sidebar is not enabled by default. To turn it on:
+垂直タブサイドバーはデフォルトで無効です。有効にするには:
 
-1. Type `chrome://flags/#vertical-tabs` in the address bar
-2. Set **Vertical tabs** to **Enabled**
-3. Click **Relaunch** to restart Chrome
-4. After restart, right-click an empty area in the tab bar to see the option
+1. アドレスバーに `chrome://flags/#vertical-tabs` と入力
+2. **Vertical tabs** を **Enabled** に変更
+3. **Relaunch** をクリックして Chrome を再起動
+4. 再起動後、タブバーの空白部分を右クリックしてオプションを確認
 
-## Installation
+## インストール
 
-1. Install Hammerspoon:
+1. Hammerspoon をインストール:
 
    ```bash
    brew install --cask hammerspoon
    ```
 
-2. Choose a version and copy to your Hammerspoon config:
+2. バージョンを選択して Hammerspoon 設定にコピー:
 
-   **Scheme version** (three modes, default):
+   **スキームバージョン** (3モード、デフォルト):
    ```bash
    cp init.lua ~/.hammerspoon/init.lua
    ```
 
-   **Keyboard-only version**:
+   **キーボード専用バージョン**:
    ```bash
    cp init-keyboard-only.lua ~/.hammerspoon/init.lua
    ```
 
-   If you already have a `~/.hammerspoon/init.lua`, append the contents instead.
+   既に `~/.hammerspoon/init.lua` がある場合は、内容を末尾に追加。
 
-3. Grant Accessibility permission:
-   - System Settings → Privacy & Security → Accessibility
-   - Add and enable Hammerspoon
+3. アクセシビリティ権限を付与:
+   - システム設定 → プライバシーとセキュリティ → アクセシビリティ
+   - Hammerspoon を追加して有効にする
 
-4. Reload Hammerspoon config (click menu bar icon → Reload Config)
+4. Hammerspoon 設定をリロード (メニューバーのアイコン → 「Reload Config」をクリック)
 
-5. (Optional) Add Hammerspoon to login items so it starts automatically:
-   - System Settings → General → Login Items
-   - Add Hammerspoon
+5. (オプション) Hammerspoon をログイン項目に追加して自動起動を設定:
+   - システム設定 → 一般 → ログイン項目
+   - Hammerspoon を追加
 
-6. (Optional) Hide the Hammerspoon Dock icon:
-   - This is enabled by default in these scripts with `local HIDE_DOCK_ICON = true`
-   - You can still reload the config from the Hammerspoon menu bar icon
+6. (オプション) Hammerspoon の Dock アイコン表示を切り替える:
+   - このスクリプトには、実行中の Hammerspoon を Dock から隠す機能があります
+   - `local HIDE_DOCK_ICON      = true` でデフォルト有効です
+   - Dock に表示したい場合は `local HIDE_DOCK_ICON      = false` に変更
+   - 設定のリロードは引き続き Hammerspoon のメニューバーアイコンから実行できます
 
-## Schemes (`init.lua`)
+## スキーム (`init.lua`)
 
-Edit the `SCHEME` variable at the top of `init.lua` to choose a mode:
+`init.lua` の先頭にある `SCHEME` 変数を編集してモードを選択:
 
-| Scheme | Value | Triggers |
-|--------|-------|----------|
-| Keyboard only | `1` | `Cmd+E` toggles sidebar |
-| Mouse edge only | `2` | Hover left edge to expand, move beyond 380px to collapse |
-| Keyboard + Mouse | `3` | Both triggers active (default) |
-
-```lua
-local SCHEME = 3  -- 1 = Keyboard, 2 = Mouse edge, 3 = Both
-```
-
-All triggers are automatically disabled when Chrome is not the frontmost app.
-
-## Triggers
-
-| Trigger | Action | Scheme |
-|---------|--------|--------|
-| `Cmd+E` | Toggle sidebar | 1 & 3 |
-| Mouse hover at left edge (0-2px) for 0.15s | Expand sidebar | 2 & 3 |
-| Mouse moves beyond 380px from left edge | Collapse sidebar | 2 & 3 |
-
-## Debug
-
-| Shortcut | Action |
-|----------|--------|
-| `Cmd+Alt+D` | Show service status |
-| `Cmd+Alt+B` | Dump all Chrome AX buttons to Console |
-| `Cmd+Alt+R` | Force restart all services |
-
-## Configuration
-
-### Scheme selector (`init.lua`)
+| スキーム | 値 | トリガー |
+|----------|-----|----------|
+| キーボードのみ | `1` | `Cmd+E` でサイドバー切り替え |
+| 画面端ホバーのみ | `2` | 画面左端にホバーで展開、380px 超えて移動で折りたたみ |
+| キーボード + マウス | `3` | 両方のトリガーが有効 (デフォルト) |
 
 ```lua
-local SCHEME = 3  -- 1 = Keyboard, 2 = Mouse edge, 3 = Both
+local SCHEME = 3  -- 1 = キーボード, 2 = 画面端ホバー, 3 = 両方
 ```
 
-### Mouse edge thresholds (`init.lua`, schemes 2 & 3)
+Chrome が最前面のアプリでない場合、すべてのトリガーは自動的に無効になります。
+
+## トリガー
+
+| トリガー | アクション | スキーム |
+|----------|-----------|----------|
+| `Cmd+E` | サイドバー切り替え | 1 & 3 |
+| 左端(0-2px)に0.15秒ホバー | サイドバー展開 | 2 & 3 |
+| 左端から380px 超えてマウス移動 | サイドバー折りたたみ | 2 & 3 |
+
+## デバッグ
+デバッグモードを有効にすると、コンソールに追加のログが出力されます。これには、トリガーの検出、AX 要素の検索結果、エラーなどが含まれます。デバッグモードは `init.lua` と `init-keyboard-only.lua` の両方で利用可能です。
+
+デバッグ用ホットキーは他アプリのショートカットと競合しやすいため、現状はデフォルトで無効にしています。使用する場合は、設定内の `local ENABLE_DEBUG_HOTKEYS = false` を `true` に変更してから Hammerspoon 設定をリロード。
+
+| ショートカット | アクション |
+|---------------|-----------|
+| `Cmd+Alt+D` | サービスステータスを表示 |
+| `Cmd+Alt+B` | Chrome の AX ボタンをすべてコンソールに出力 |
+| `Cmd+Alt+R` | すべてのサービスを強制再起動 |
+
+## 設定
+
+### スキームセレクター(`init.lua`)
 
 ```lua
-local EDGE_THRESHOLD    = 2       -- px from left edge to trigger hover
-local EXIT_THRESHOLD    = 380     -- px from left edge to trigger collapse
-local WAIT_TIME         = 0.15    -- seconds to hover before triggering
-local MOUSE_POLL_INTERVAL = 0.05  -- seconds between mouse position checks
+local SCHEME = 3  -- 1 = キーボード, 2 = 画面端ホバー, 3 = 両方
 ```
 
-### Both versions
+### 画面端ホバーのしきい値 (`init.lua`、スキーム 2 & 3)
 
 ```lua
-local HIDE_DOCK_ICON = true  -- hide Hammerspoon from the Dock while running
-local DEBUG = true  -- print debug messages to Console
+local EDGE_THRESHOLD    = 2       -- 左端からのトリガー距離(ピクセル)
+local EXIT_THRESHOLD    = 380     -- 折りたたみトリガーの左端からの距離(ピクセル)
+local WAIT_TIME         = 0.15    -- ホバー待機時間(秒)
+local MOUSE_POLL_INTERVAL = 0.05  -- マウス位置チェックの間隔(秒)
 ```
 
-## Customizing the keyboard shortcut
+### 両バージョン共通
 
-Available in both `init.lua` and `init-keyboard-only.lua`. The default shortcut is `Cmd+E`, changed from the earlier `Cmd+S` default so Chrome's native "Save page" shortcut remains available. To change it, edit the key check in the `createKeyTap` function:
+Hammerspoon の Dock アイコンを隠す機能はデフォルトで有効です。Dock に表示したい場合は `local HIDE_DOCK_ICON      = false` に変更。
+
+```lua
+local HIDE_DOCK_ICON      = true  -- 実行中の Hammerspoon を Dock から隠す
+local DEBUG = true  -- コンソールにデバッグメッセージを出力
+```
+
+## キーボードショートカットのカスタマイズ
+
+`init.lua` と `init-keyboard-only.lua` の両方で利用可能です。  
+また、デフォルトのショートカットは `Cmd+S` から `Cmd+E` に変更しました。  
+これにより Chrome の「ページを保存」ショートカットをそのまま使えます。変更するには、`createKeyTap` 関数内のキー判定を編集:
 
 ```lua
 -- Cmd+E -> toggle sidebar
@@ -146,22 +157,22 @@ if flags.cmd and not flags.ctrl and not flags.alt and not flags.shift
     and keyCode == keycodes.map["e"] then
 ```
 
-### Modifier keys
+### 修飾キー
 
-Change the `flags.*` conditions to set your desired modifier combination:
+`flags.*` 条件を変更して希望の修飾キーの組み合わせを設定:
 
-| Modifier | Flag | Example |
-|----------|------|---------|
+| 修飾キー | フラグ | 例 |
+|----------|--------|-----|
 | Cmd | `flags.cmd` | `flags.cmd and not flags.ctrl` |
 | Ctrl | `flags.ctrl` | `flags.ctrl and not flags.cmd` |
 | Alt/Option | `flags.alt` | `flags.alt` |
 | Shift | `flags.shift` | `flags.shift` |
 
-Set the flag to `true` to require it, `not flags.xxx` to exclude it.
+フラグを `true` に設定すると必須、`not flags.xxx` に設定すると除外される。
 
-### Key code
+### キーコード
 
-Change `keycodes.map["e"]` to any key name. Common examples:
+`keycodes.map["e"]` を任意のキー名に変更。よく使う例:
 
 ```lua
 keycodes.map["s"]       -- S
@@ -172,9 +183,9 @@ keycodes.map["space"]   -- Space
 keycodes.map["f1"]      -- F1
 ```
 
-Full key name list: run `hs.keycodes.map` in Hammerspoon Console.
+キー名の一覧をみるには: Hammerspoon コンソールで `hs.keycodes.map` を実行。
 
-### Examples
+### 例
 
 **`Ctrl+Shift+B`**:
 ```lua
@@ -194,31 +205,33 @@ if flags.cmd and not flags.ctrl and not flags.alt and flags.shift
     and keyCode == keycodes.map["return"] then
 ```
 
-After editing, reload Hammerspoon config to apply.
+編集後、Hammerspoon 設定をリロードすると適用されます。
 
-## How it works
+## 仕組み
 
-1. An `eventtap` intercepts `Cmd+E` when Chrome is frontmost (schemes 1 & 3)
-2. A mouse position poller (50Hz) detects left-edge hover and exit (schemes 2 & 3)
-3. Both triggers call `toggleSidebar()` which:
-   - Gets Chrome's `AXUIElement` root via `hs.axuielement.applicationElement()`
-   - Searches windows for a button with `AXDescription` matching "Expand Tabs" or "Collapse Tabs"
-   - Calls `performAction("AXPress")` on the found button
-4. A watchdog detects if the mouse poller dies and auto-restarts (schemes 2 & 3)
-5. Grace periods prevent false triggers during app switching
+1. Chrome が最前面にあるとき、`eventtap` が `Cmd+E` を傍受 (スキーム 1 & 3)  
+   - フォーク元では `Cmd+S` でしたが、Chrome の「ページを保存」ショートカットと衝突するため `Cmd+E` に変更しました。
+2. マウス位置監視タイマー (50Hz) が左端のホバーと退出を検出 (スキーム 2 & 3)
+3. 両方のトリガーによる `toggleSidebar()` の呼び出し（以下の処理を実行）:
+   - `hs.axuielement.applicationElement()` による Chrome の AX ルート要素の取得
+   - ウィンドウ内からの `AXDescription` が "Expand Tabs" または "Collapse Tabs" に一致するボタンの検索
+   - 検出されたボタンへの `performAction("AXPress")` の実行
+4. ウォッチドッグによるマウス位置監視タイマーの異常検出および自動再起動 (スキーム 2 & 3)
+5. 誤動作防止のための猶予時間（Grace Period）による、アプリ切り替え時の誤トリガー防止
 
-## Files
+## ファイル
 
-| File | Description |
-|------|-------------|
-| `init.lua` | Three-scheme version (keyboard / mouse / both) |
-| `init-keyboard-only.lua` | Keyboard-only version, no mouse detection |
+| ファイル | 説明 |
+|----------|------|
+| `init.lua` | 3スキームバージョン (キーボード / マウス / 両方) |
+| `init-keyboard-only.lua` | キーボード専用バージョン、マウス検出なし |
 
-## Credits
+## クレジット
+このプログラムは、[こちらのレポジトリ](https://github.com/Ha1baraA11/Chrome-Vertical-Tab-Sidebar-Toggle)をフォークの上、改善を加えたものです。
 
-- Original concept: [ChromeSidebarToggleRaycast](https://github.com/RotulPlastik/ChromeSidebarToggleRaycast) by RotulPlastik
-- Adapted for Hammerspoon with mouse-edge trigger support
+- フォーク先原案:[ChromeSidebarToggleRaycast](https://github.com/RotulPlastik/ChromeSidebarToggleRaycast) by RotulPlastik
+- Hammerspoon に適応し、画面端マウスホバートリガーを追加
 
-## License
+## ライセンス
 
 MIT
