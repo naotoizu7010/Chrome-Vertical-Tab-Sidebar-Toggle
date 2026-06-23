@@ -37,6 +37,13 @@ local alert     = hs.alert
 local APP_NAME = "Google Chrome"
 local DEBUG    = true
 
+local SIDEBAR_BUTTON_LABELS = {
+    ["expand tabs"] = true,
+    ["collapse tabs"] = true,
+    ["タブを開く"] = true,
+    ["タブを閉じる"] = true,
+}
+
 -- ----------------------------------------------------------
 -- State
 -- ----------------------------------------------------------
@@ -49,7 +56,12 @@ _G.inSwitchingGracePeriod = false
 -- Forward declarations
 -- ----------------------------------------------------------
 local log, startKeyTap, stopKeyTap, restartKeyTap
-local toggleSidebar, setGracePeriod, findSidebarButton
+local toggleSidebar, setGracePeriod, findSidebarButton, isSidebarButtonLabel
+
+isSidebarButtonLabel = function(value)
+    local label = string.lower(tostring(value or ""))
+    return SIDEBAR_BUTTON_LABELS[label] or false
+end
 
 -- ----------------------------------------------------------
 -- AX: Find sidebar button in Chrome's accessibility tree
@@ -60,10 +72,10 @@ findSidebarButton = function(axElement, depth)
 
     local role = axElement:attributeValue("AXRole")
     if role == "AXButton" then
-        local title = string.lower(tostring(axElement:attributeValue("AXTitle") or ""))
-        local desc  = string.lower(tostring(axElement:attributeValue("AXDescription") or ""))
-        if title == "expand tabs" or title == "collapse tabs"
-            or desc == "expand tabs" or desc == "collapse tabs" then
+        local title = axElement:attributeValue("AXTitle")
+        local desc  = axElement:attributeValue("AXDescription")
+        local help  = axElement:attributeValue("AXHelp")
+        if isSidebarButtonLabel(title) or isSidebarButtonLabel(desc) or isSidebarButtonLabel(help) then
             return axElement
         end
     end

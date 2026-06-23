@@ -49,6 +49,13 @@ local WAIT_TIME           = 0.15    -- seconds to hover before triggering
 local MOUSE_POLL_INTERVAL = 0.05    -- seconds between mouse position checks
 local DEBUG               = true
 
+local SIDEBAR_BUTTON_LABELS = {
+    ["expand tabs"] = true,
+    ["collapse tabs"] = true,
+    ["タブを開く"] = true,
+    ["タブを閉じる"] = true,
+}
+
 local USE_KEYBOARD = (SCHEME == 1 or SCHEME == 3)
 local USE_MOUSE    = (SCHEME == 2 or SCHEME == 3)
 
@@ -69,7 +76,12 @@ _G.mouseLastHeartbeat     = timer.secondsSinceEpoch()
 -- ----------------------------------------------------------
 local log, areServicesRunning, startServices, stopServices, restartServices
 local createKeyTap, createMousePoller, resetEdgeState, toggleSidebar
-local mousePollCallback, setGracePeriod, findSidebarButton
+local mousePollCallback, setGracePeriod, findSidebarButton, isSidebarButtonLabel
+
+isSidebarButtonLabel = function(value)
+    local label = string.lower(tostring(value or ""))
+    return SIDEBAR_BUTTON_LABELS[label] or false
+end
 
 -- ----------------------------------------------------------
 -- AX: Find sidebar button in Chrome's accessibility tree
@@ -80,10 +92,10 @@ findSidebarButton = function(axElement, depth)
 
     local role = axElement:attributeValue("AXRole")
     if role == "AXButton" then
-        local title = string.lower(tostring(axElement:attributeValue("AXTitle") or ""))
-        local desc  = string.lower(tostring(axElement:attributeValue("AXDescription") or ""))
-        if title == "expand tabs" or title == "collapse tabs"
-            or desc == "expand tabs" or desc == "collapse tabs" then
+        local title = axElement:attributeValue("AXTitle")
+        local desc  = axElement:attributeValue("AXDescription")
+        local help  = axElement:attributeValue("AXHelp")
+        if isSidebarButtonLabel(title) or isSidebarButtonLabel(desc) or isSidebarButtonLabel(help) then
             return axElement
         end
     end
