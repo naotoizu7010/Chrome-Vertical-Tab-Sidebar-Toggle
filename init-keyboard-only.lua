@@ -15,7 +15,7 @@
 -- Triggers:
 --   Cmd+S in Chrome -> toggle sidebar (blocks Chrome's save-page)
 --
--- Debug:
+-- Debug hotkeys (disabled by default; set ENABLE_DEBUG_HOTKEYS = true):
 --   Cmd+Alt+D -> show service status
 --   Cmd+Alt+B -> dump all Chrome AX buttons to Console
 --   Cmd+Alt+R -> force restart key tap
@@ -36,6 +36,7 @@ local alert     = hs.alert
 -- ----------------------------------------------------------
 local APP_NAME = "Google Chrome"
 local DEBUG    = true
+local ENABLE_DEBUG_HOTKEYS = false
 
 local SIDEBAR_BUTTON_LABELS = {
     ["expand tabs"] = true,
@@ -257,78 +258,80 @@ end)
 -- ----------------------------------------------------------
 -- Debug hotkeys
 -- ----------------------------------------------------------
-hs.hotkey.bind({"cmd", "alt"}, "D", function()
-    local frontApp = app.frontmostApplication()
-    local keyTapRunning = keyTap and keyTap:isEnabled()
+if ENABLE_DEBUG_HOTKEYS then
+    hs.hotkey.bind({"cmd", "alt"}, "D", function()
+        local frontApp = app.frontmostApplication()
+        local keyTapRunning = keyTap and keyTap:isEnabled()
 
-    local status = string.format(
-        "Chrome-Vertical-Tab-Sidebar-Toggle (Keyboard Only):\n" ..
-        "App: %s\n" ..
-        "KeyTap: %s\n" ..
-        "Events: %d\n" ..
-        "Grace: %s",
-        frontApp and frontApp:name() or "None",
-        keyTapRunning and "running" or "stopped",
-        totalEventCount,
-        _G.inSwitchingGracePeriod and "yes" or "no"
-    )
+        local status = string.format(
+            "Chrome-Vertical-Tab-Sidebar-Toggle (Keyboard Only):\n" ..
+            "App: %s\n" ..
+            "KeyTap: %s\n" ..
+            "Events: %d\n" ..
+            "Grace: %s",
+            frontApp and frontApp:name() or "None",
+            keyTapRunning and "running" or "stopped",
+            totalEventCount,
+            _G.inSwitchingGracePeriod and "yes" or "no"
+        )
 
-    alert.show(status, 5)
-    log("Status: " .. status:gsub("\n", ", "))
-end)
+        alert.show(status, 5)
+        log("Status: " .. status:gsub("\n", ", "))
+    end)
 
-hs.hotkey.bind({"cmd", "alt"}, "B", function()
-    local frontApp = app.frontmostApplication()
-    if not frontApp or frontApp:name() ~= APP_NAME then
-        alert.show("Chrome is not frontmost", 3)
-        return
-    end
-
-    local axApp = hs.axuielement.applicationElement(frontApp)
-    local windows = axApp:attributeValue("AXWindows")
-    if not windows or #windows == 0 then
-        alert.show("No windows", 3)
-        return
-    end
-
-    local results = {}
-    local function dumpButtons(el, depth)
-        if not el or depth > 15 then return end
-        local role = el:attributeValue("AXRole")
-        local title = el:attributeValue("AXTitle")
-        local desc = el:attributeValue("AXDescription")
-        local help = el:attributeValue("AXHelp")
-
-        if role == "AXButton" then
-            table.insert(results, string.format(
-                "Title: [%s] | Desc: [%s] | Help: [%s]",
-                tostring(title), tostring(desc), tostring(help)
-            ))
+    hs.hotkey.bind({"cmd", "alt"}, "B", function()
+        local frontApp = app.frontmostApplication()
+        if not frontApp or frontApp:name() ~= APP_NAME then
+            alert.show("Chrome is not frontmost", 3)
+            return
         end
 
-        local children = el:attributeValue("AXChildren")
-        if children then
-            for _, child in ipairs(children) do
-                dumpButtons(child, depth + 1)
+        local axApp = hs.axuielement.applicationElement(frontApp)
+        local windows = axApp:attributeValue("AXWindows")
+        if not windows or #windows == 0 then
+            alert.show("No windows", 3)
+            return
+        end
+
+        local results = {}
+        local function dumpButtons(el, depth)
+            if not el or depth > 15 then return end
+            local role = el:attributeValue("AXRole")
+            local title = el:attributeValue("AXTitle")
+            local desc = el:attributeValue("AXDescription")
+            local help = el:attributeValue("AXHelp")
+
+            if role == "AXButton" then
+                table.insert(results, string.format(
+                    "Title: [%s] | Desc: [%s] | Help: [%s]",
+                    tostring(title), tostring(desc), tostring(help)
+                ))
+            end
+
+            local children = el:attributeValue("AXChildren")
+            if children then
+                for _, child in ipairs(children) do
+                    dumpButtons(child, depth + 1)
+                end
             end
         end
-    end
 
-    for _, win in ipairs(windows) do
-        dumpButtons(win, 0)
-    end
+        for _, win in ipairs(windows) do
+            dumpButtons(win, 0)
+        end
 
-    print("=== Chrome AX Buttons ===")
-    for i, r in ipairs(results) do
-        print(i .. ". " .. r)
-    end
-    print("=== Total: " .. #results .. " buttons ===")
-    alert.show("Found " .. #results .. " buttons, check Console", 3)
-end)
+        print("=== Chrome AX Buttons ===")
+        for i, r in ipairs(results) do
+            print(i .. ". " .. r)
+        end
+        print("=== Total: " .. #results .. " buttons ===")
+        alert.show("Found " .. #results .. " buttons, check Console", 3)
+    end)
 
-hs.hotkey.bind({"cmd", "alt"}, "R", function()
-    alert.show("Restarting KeyTap...", 2)
-    restartKeyTap()
-end)
+    hs.hotkey.bind({"cmd", "alt"}, "R", function()
+        alert.show("Restarting KeyTap...", 2)
+        restartKeyTap()
+    end)
+end
 
 log("Chrome-Vertical-Tab-Sidebar-Toggle (Keyboard Only) loaded")
